@@ -1,0 +1,330 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans antialiased;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-800/50 rounded-lg;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-600/80 rounded-lg;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-500/80;
+  }
+
+  /* Triangle clip path for Armenian mountain */
+  .clip-triangle {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+}
+
+@layer components {
+  /* Animated gradient background */
+  .bg-gradient-animated {
+    background: linear-gradient(-45deg, #D90429, #003F91, #FF8F00, #D90429);
+    background-size: 400% 400%;
+    animation: gradientShift 10s ease infinite;
+  }
+  
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Animated gradient for text */
+  .animate-gradient-x {
+    animation: gradient-x 3s ease infinite;
+  }
+
+  @keyframes gradient-x {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  /* Fade in animation */
+  .animate-fadeIn {
+    animation: fadeIn 0.7s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Slide up animation for messages */
+  @keyframes slideUp {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-slideUp {
+    animation: slideUp 0.7s ease-out;
+  }
+
+  /* Shimmer effect for loading */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  /* Typing animation */
+  .typing-animation {
+    position: relative;
+  }
+
+
+  /* Smooth transitions for all interactive elements */
+  .transition-smooth {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Armenian flag colors as CSS variables */
+  :root {
+    --armenian-red: #D90429;
+    --armenian-blue: #003F91;
+    --armenian-orange: #FF8F00;
+  }
+
+  /* Glassmorphism effect */
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Flowing gradient animation for typing */
+  @keyframes flowingGradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .flowing-gradient {
+    background-size: 200% 200%;
+    animation: flowingGradient 3s ease-in-out infinite;
+  }
+
+  /* Pulsing animation for AI logo */
+  .ai-pulse {
+    animation: aiPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes aiPulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(217, 4, 41, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 0 12px rgba(217, 4, 41, 0);
+    }
+  }
+
+  /* Enhanced button hover effects */
+  .btn-hover {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-hover:active {
+    transform: translateY(0);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Animated waves for logo */
+  .animate-pulse-waves {
+    position: relative;
+  }
+
+  .animate-pulse-waves::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #D90429, #003F91, #FF8F00);
+    opacity: 0;
+    animation: waves 4s ease-in-out infinite;
+    z-index: -1;
+  }
+
+  @keyframes waves {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.4;
+      transform: scale(1.15);
+    }
+  }
+
+  /* Focus styles with dynamic colors */
+  .focus-dynamic:focus-within {
+    border-color: var(--focus-border-color);
+    box-shadow: 0 0 0 4px var(--focus-shadow-color);
+  }
+
+  /* Hover effects with dynamic colors */
+  .hover-dynamic:hover {
+    color: var(--hover-color);
+  }
+
+  /* Enhanced mobile responsiveness */
+  @media (max-width: 768px) {
+    .chat-container {
+      @apply px-3;
+    }
+    
+    .message-bubble {
+      @apply max-w-[90%];
+    }
+    
+    .sidebar {
+      @apply w-full;
+    }
+
+    /* Improved mobile touch targets */
+    button {
+      min-height: 48px;
+      min-width: 48px;
+    }
+
+    /* Better mobile spacing */
+    .mobile-spacing {
+      @apply p-4 gap-4;
+    }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .text-gray-400 {
+      @apply text-gray-300;
+    }
+    
+    .border-gray-700 {
+      @apply border-gray-600;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Focus styles for accessibility */
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-[#D90429];
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Enhanced animations */
+  .animate-bounce-soft {
+    animation: bounceSoft 2s infinite;
+  }
+
+  @keyframes bounceSoft {
+    0%, 20%, 53%, 80%, 100% {
+      transform: translate3d(0,0,0);
+    }
+    40%, 43% {
+      transform: translate3d(0, -8px, 0);
+    }
+    70% {
+      transform: translate3d(0, -4px, 0);
+    }
+    90% {
+      transform: translate3d(0, -2px, 0);
+    }
+  }
+
+  /* Telegram waves animation */
+  @keyframes telegramWaves {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.4);
+      opacity: 0;
+    }
+  }
+
+  .telegram-waves {
+    animation: telegramWaves 2s infinite;
+  }
+
+  /* Loading spinner */
+  .spinner {
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-left: 2px solid #D90429;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}
