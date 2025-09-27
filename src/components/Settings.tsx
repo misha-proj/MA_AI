@@ -129,31 +129,6 @@ export const Settings: React.FC<SettingsProps> = ({
             )}
           </div>
 
-          {/* Telegram Contact */}
-          <div>
-            <a
-              href="https://t.me/mi_vs"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center gap-4 px-6 py-4 bg-gradient-to-r from-blue-600/20 to-blue-500/20 hover:from-blue-600/30 hover:to-blue-500/30 rounded-2xl transition-all duration-300 text-white hover:scale-105 backdrop-blur-sm border border-blue-500/20 relative overflow-hidden"
-            >
-              {/* Animated waves */}
-              <div className="absolute inset-0 opacity-20">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 via-transparent to-blue-500/30 animate-pulse"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/20 to-transparent animate-ping"></div>
-              </div>
-              
-              {/* Telegram icon with pulsing effect */}
-              <div className="relative">
-                <svg className="w-6 h-6 text-blue-400 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 8.16l-1.61 7.59c-.12.54-.44.67-.89.42l-2.46-1.81-1.19 1.14c-.13.13-.24.24-.49.24l.17-2.43 4.47-4.03c.19-.17-.04-.27-.3-.1L9.28 13.47l-2.38-.75c-.52-.16-.53-.52.11-.77l9.3-3.58c.43-.16.81.1.67.73z"/>
-                </svg>
-                <div className="absolute inset-0 bg-blue-400/30 rounded-full animate-ping"></div>
-              </div>
-              
-              <span className="font-medium relative z-10">Связаться</span>
-            </a>
-          </div>
         </div>
       </div>
     </div>

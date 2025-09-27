@@ -5,6 +5,18 @@
 @layer base {
   body {
     @apply font-sans antialiased;
+    overflow: hidden;
+    height: 100vh;
+  }
+  
+  html {
+    overflow: hidden;
+    height: 100vh;
+  }
+  
+  #root {
+    height: 100vh;
+    overflow: hidden;
   }
   
   /* Custom scrollbar */
@@ -275,6 +287,7 @@
   /* Smooth scroll behavior */
   html {
     scroll-behavior: smooth;
+    overflow: hidden;
   }
 
   /* Enhanced animations */

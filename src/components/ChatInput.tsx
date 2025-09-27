@@ -147,7 +147,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         {/* Input Form */}
         <form onSubmit={handleSubmit} className="relative">
           <div 
-            className="relative flex items-end bg-gray-800/90 backdrop-blur-sm rounded-3xl border border-gray-700/50 transition-all duration-500 focus-within:shadow-2xl focus-within:border-gray-600/70 shadow-xl"
+            className="relative flex items-end bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 transition-all duration-500 focus-within:shadow-2xl focus-within:border-white/20 shadow-xl"
             style={{ 
               '--focus-border-color': flagColors.primary,
               '--focus-shadow-color': flagColors.primary + '20'
@@ -157,7 +157,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Сообщение..."
-              className="flex-1 bg-transparent text-white placeholder-gray-500 border-none outline-none resize-none px-6 py-4 max-h-32 min-h-[60px] transition-all duration-300 rounded-3xl"
+              className="flex-1 bg-transparent text-white placeholder-gray-500 border-none outline-none resize-none px-6 py-4 max-h-32 min-h-[60px] transition-all duration-300 rounded-xl"
               rows={1}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -188,7 +188,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="p-3 text-gray-400 transition-all duration-300 hover:scale-110 rounded-2xl hover:bg-gray-700/50 hover:text-white"
+                className="p-3 text-gray-400 transition-all duration-300 hover:scale-110 rounded-xl hover:bg-white/10 hover:text-white"
                 disabled={disabled}
               >
                 <Paperclip className="w-5 h-5" />
@@ -197,13 +197,15 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               <button
                 type="submit"
                 disabled={!canSend}
-                className={`p-3 rounded-2xl transition-all duration-300 ${
+                className={`p-3 rounded-xl transition-all duration-300 flex items-center justify-center ${
                   canSend
                     ? `bg-gradient-to-r ${flagColors.gradient} text-white hover:shadow-xl hover:scale-110 active:scale-95 shadow-lg`
                     : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                <Send className="w-5 h-5" />
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
               </button>
             </div>
           </div>

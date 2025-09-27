@@ -20,6 +20,7 @@ export interface AppState {
   sidebarOpen: boolean;
   settingsOpen: boolean;
   adminOpen: boolean;
+  languageMenuOpen: boolean;
   language: 'ru' | 'hy' | 'en';
   selectedModel: 'AM Base' | 'AM Start' | 'AM Pro';
   apiKey: string;

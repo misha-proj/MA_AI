@@ -19,6 +19,7 @@ function App() {
     sidebarOpen: false,
     settingsOpen: false,
     adminOpen: false,
+    languageMenuOpen: false,
     language: 'ru',
     selectedModel: 'AM Base',
     apiKey: localStorage.getItem('openai_api_key') || '',
@@ -45,7 +46,9 @@ function App() {
 
   // Save chats to localStorage
   useEffect(() => {
-    localStorage.setItem('ma_ai_chats', JSON.stringify(appState.chats));
+    if (appState.chats.length > 0) {
+      localStorage.setItem('ma_ai_chats', JSON.stringify(appState.chats));
+    }
   }, [appState.chats]);
 
   // Save language to localStorage
@@ -56,7 +59,13 @@ function App() {
   // Scroll to bottom when new messages are added
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      const scrollToBottom = () => {
+        chatContainerRef.current!.scrollTop = chatContainerRef.current!.scrollHeight;
+      };
+      
+      // Smooth scroll with delay for typing animation
+      const timer = setTimeout(scrollToBottom, 100);
+      return () => clearTimeout(timer);
     }
   }, [appState.currentChat?.messages]);
 
@@ -354,10 +363,32 @@ function App() {
     setAppState(prev => ({ ...prev, language: nextLanguage }));
   };
 
+  const selectChat = (chat: Chat) => {
+    setAppState(prev => ({
+      ...prev,
+      currentChat: chat,
+      sidebarOpen: false,
+      isTyping: false,
+      typingText: ''
+    }));
+  };
+
+  const deleteChat = (chatId: string) => {
+    setAppState(prev => {
+      const updatedChats = prev.chats.filter(c => c.id !== chatId);
+      const newCurrentChat = prev.currentChat?.id === chatId ? null : prev.currentChat;
+      return {
+        ...prev,
+        chats: updatedChats,
+        currentChat: newCurrentChat
+      };
+    });
+  };
+
   const flagColors = getFlagColors(appState.language);
 
   return (
-    <div className={`min-h-screen text-white transition-all duration-700 ease-in-out ${
+    <div className={`h-screen overflow-hidden text-white transition-all duration-700 ease-in-out ${
       appState.language === 'hy' 
         ? 'bg-gradient-to-br from-gray-900 via-black to-gray-800 relative overflow-hidden' 
         : 'bg-gradient-to-br from-gray-900 via-black to-gray-800'
@@ -365,8 +396,8 @@ function App() {
       
       {/* Armenian flag background when Armenian language is selected */}
       {appState.language === 'hy' && (
-        <div className="absolute inset-0 opacity-3 pointer-events-none blur-sm">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#D90429]/3 via-[#003F91]/3 to-[#FF8F00]/3" />
+        <div className="absolute inset-0 opacity-5 pointer-events-none blur-sm">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#D90429]/5 via-[#003F91]/5 to-[#FF8F00]/5" />
         </div>
       )}
 
@@ -375,17 +406,51 @@ function App() {
         appState.sidebarOpen ? 'lg:ml-80' : ''
       }`}>
         {/* Main Content */}
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full h-screen overflow-hidden">
           {/* Header */}
-          <header className="flex items-center justify-between p-6 border-b border-gray-800/50 backdrop-blur-xl bg-gray-900/80 shadow-lg">
+          <header className="flex items-center justify-between p-6 border-b border-white/10 backdrop-blur-xl bg-gray-900/80 shadow-lg flex-shrink-0">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setAppState(prev => ({ ...prev, sidebarOpen: !prev.sidebarOpen }))}
-                className="p-3 text-gray-400 hover:text-white transition-all duration-300 rounded-xl hover:bg-gray-800/50 hover:scale-110"
+                className="p-3 text-gray-400 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 hover:scale-110"
               >
                 <Menu className="w-5 h-5" />
               </button>
-              <ArmenianFlag size="sm" language={appState.language} />
+              
+              {/* Language selector with flag */}
+              <div className="relative">
+                <button
+                  onClick={() => setAppState(prev => ({ ...prev, languageMenuOpen: !prev.languageMenuOpen }))}
+                  className="transition-all duration-300 hover:scale-105 rounded-xl"
+                >
+                  <ArmenianFlag size="sm" language={appState.language} />
+                </button>
+                
+                {/* Language dropdown */}
+                {appState.languageMenuOpen && (
+                  <div className="absolute top-full left-0 mt-2 bg-gray-900/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl z-50 min-w-32">
+                    {[
+                      { code: 'ru' as const, name: 'Русский', flag: '🇷🇺' },
+                      { code: 'hy' as const, name: 'Հայերեն', flag: '🇦🇲' },
+                      { code: 'en' as const, name: 'English', flag: '🇺🇸' }
+                    ].map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => {
+                          setAppState(prev => ({ ...prev, language: lang.code, languageMenuOpen: false }));
+                        }}
+                        className={`w-full text-left px-4 py-3 hover:bg-white/10 transition-all duration-300 first:rounded-t-xl last:rounded-b-xl flex items-center gap-3 ${
+                          appState.language === lang.code ? 'bg-white/10 text-white' : 'text-gray-300'
+                        }`}
+                      >
+                        <span className="text-lg">{lang.flag}</span>
+                        <span className="text-sm font-medium">{lang.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
               <h1 className="text-2xl font-bold bg-gradient-to-r from-[#D90429] via-[#003F91] to-[#FF8F00] bg-clip-text text-transparent animate-gradient-x bg-[length:200%_200%]">
                 MA AI
               </h1>
@@ -394,21 +459,15 @@ function App() {
             <div className="flex items-center gap-3">
               <button
                 onClick={createNewChat}
-                className="p-3 text-gray-400 hover:text-white transition-all duration-300 rounded-xl hover:bg-gray-800/30 hover:scale-105"
+                className="p-3 text-gray-400 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 hover:scale-105"
               >
                 <Plus className="w-5 h-5" />
-              </button>
-              <button
-                onClick={toggleLanguage}
-                className="transition-all duration-300 hover:scale-105 rounded-xl"
-              >
-                <ArmenianFlag size="sm" language={appState.language} />
               </button>
             </div>
           </header>
 
           {/* Chat Area */}
-          <div ref={chatContainerRef} className="flex-1 overflow-y-auto px-6 py-8">
+          <div ref={chatContainerRef} className="flex-1 overflow-y-auto px-6 py-8 scroll-smooth">
             {!appState.currentChat?.messages.length ? (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
@@ -434,14 +493,16 @@ function App() {
           </div>
 
           {/* Chat Input */}
-          <ChatInput
-            onSendMessage={sendMessage}
-            disabled={appState.isTyping}
-            language={appState.language}
-            selectedModel={appState.selectedModel}
-            onModelChange={(model) => setAppState(prev => ({ ...prev, selectedModel: model }))}
-            flagColors={flagColors}
-          />
+          <div className="flex-shrink-0">
+            <ChatInput
+              onSendMessage={sendMessage}
+              disabled={appState.isTyping}
+              language={appState.language}
+              selectedModel={appState.selectedModel}
+              onModelChange={(model) => setAppState(prev => ({ ...prev, selectedModel: model }))}
+              flagColors={flagColors}
+            />
+          </div>
         </div>
       </div>
 
@@ -449,9 +510,10 @@ function App() {
       <Sidebar
         chats={appState.chats}
         currentChat={appState.currentChat}
-        onSelectChat={(chat) => setAppState(prev => ({ ...prev, currentChat: chat, sidebarOpen: false }))}
+        onSelectChat={selectChat}
         onNewChat={createNewChat}
         onDeleteChats={deleteAllChats}
+        onDeleteChat={deleteChat}
         isOpen={appState.sidebarOpen}
         onToggle={() => setAppState(prev => ({ ...prev, sidebarOpen: !prev.sidebarOpen }))}
         onOpenSettings={() => setAppState(prev => ({ ...prev, settingsOpen: true }))}
@@ -466,6 +528,14 @@ function App() {
         onLanguageChange={(language) => setAppState(prev => ({ ...prev, language }))}
         onOpenAdmin={() => setAppState(prev => ({ ...prev, adminOpen: true }))}
       />
+
+      {/* Close language menu on outside click */}
+      {appState.languageMenuOpen && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setAppState(prev => ({ ...prev, languageMenuOpen: false }))}
+        />
+      )}
 
       {/* Admin Panel */}
       <AdminPanel

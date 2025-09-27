@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Settings, X } from 'lucide-react';
+import { Plus, Settings, X, Trash2 } from 'lucide-react';
 import { Chat, Language } from '../types';
 import { ArmenianLogo, ArmenianFlag } from './ArmenianFlag';
 import { getTranslation } from '../utils/translations';
@@ -10,6 +10,7 @@ interface SidebarProps {
   onSelectChat: (chat: Chat) => void;
   onNewChat: () => void;
   onDeleteChats: () => void;
+  onDeleteChat: (chatId: string) => void;
   isOpen: boolean;
   onToggle: () => void;
   onOpenSettings: () => void;
@@ -22,6 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectChat,
   onNewChat,
   onDeleteChats,
+  onDeleteChat,
   isOpen,
   onToggle,
   onOpenSettings,
@@ -82,20 +84,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Sidebar */}
       <div className={`
-        fixed top-0 left-0 h-full w-80 bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50 z-50
+        fixed top-0 left-0 h-full w-80 bg-gray-900/95 backdrop-blur-xl border-r border-white/10 z-50
         transform transition-all duration-500 ease-out shadow-2xl
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:translate-x-0
+        lg:translate-x-0 overflow-hidden
       `}>
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-800/50">
+        <div className="flex items-center justify-between p-6 border-b border-white/10">
           <div className="flex items-center gap-3">
             <ArmenianFlag size="sm" language={language} />
-            <span className="font-bold text-xl bg-gradient-to-r from-[#D90429] to-[#FF8F00] bg-clip-text text-transparent">MA AI</span>
+            <span className="font-bold text-xl bg-gradient-to-r from-[#D90429] to-[#FF8F00] bg-clip-text text-transparent animate-gradient-x bg-[length:200%_200%]">
+              MA AI
+            </span>
           </div>
           <button
             onClick={onToggle}
-            className="lg:hidden p-2 text-gray-400 hover:text-white transition-all duration-300 rounded-xl hover:bg-gray-800/50 hover:scale-110"
+            className="lg:hidden p-2 text-gray-400 hover:text-white transition-all duration-300 rounded-xl hover:bg-white/10 hover:scale-110"
           >
             <X className="w-5 h-5" />
           </button>
@@ -105,7 +109,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="p-6">
           <button
             onClick={onNewChat}
-            className="w-full flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-gray-800/80 to-gray-700/80 backdrop-blur-sm hover:from-gray-700/80 hover:to-gray-600/80 rounded-2xl transition-all duration-300 text-white hover:scale-105 hover:shadow-xl shadow-lg"
+            className="w-full flex items-center gap-3 px-6 py-4 bg-white/5 backdrop-blur-sm hover:bg-white/10 rounded-xl transition-all duration-300 text-white hover:scale-105 hover:shadow-xl shadow-lg border border-white/10"
           >
             <Plus className="w-5 h-5" />
             <span className="font-medium">{getTranslation(language, 'newChat')}</span>
@@ -123,17 +127,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div key={groupKey} className="mb-8">
                 <h3 className="text-sm text-gray-400 mb-3 px-3 font-medium">{groupTitle}</h3>
                 {groupChats.map((chat) => (
-                  <button
-                    key={chat.id}
-                    onClick={() => onSelectChat(chat)}
-                    className={`w-full text-left px-4 py-3 rounded-2xl mb-2 transition-all duration-300 hover:scale-105 ${
-                      currentChat?.id === chat.id
-                        ? 'bg-gradient-to-r from-[#D90429] to-[#FF8F00] text-white shadow-xl transform scale-105'
-                        : 'text-gray-300 hover:bg-gray-800/60 backdrop-blur-sm hover:text-white'
-                    }`}
-                  >
-                    <div className="truncate text-sm font-medium">{chat.title}</div>
-                  </button>
+                  <div key={chat.id} className="flex items-center gap-2 mb-2">
+                    <button
+                      onClick={() => onSelectChat(chat)}
+                      className={`flex-1 text-left px-4 py-3 rounded-xl transition-all duration-300 hover:scale-105 ${
+                        currentChat?.id === chat.id
+                          ? 'bg-gradient-to-r from-[#D90429]/20 to-[#FF8F00]/20 text-white shadow-xl transform scale-105 border border-white/20'
+                          : 'text-gray-300 hover:bg-white/10 backdrop-blur-sm hover:text-white border border-white/5'
+                      }`}
+                    >
+                      <div className="truncate text-sm font-medium">{chat.title}</div>
+                    </button>
+                    <button
+                      onClick={() => onDeleteChat(chat.id)}
+                      className="p-2 text-gray-400 hover:text-red-400 transition-all duration-300 rounded-lg hover:bg-red-500/10"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 ))}
               </div>
             );
@@ -141,13 +152,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Bottom Menu */}
-        <div className="border-t border-gray-800/50 p-6">
+        <div className="border-t border-white/10 p-6">
           <button
             onClick={handleDeleteChats}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 mb-3 hover:scale-105 ${
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 mb-3 hover:scale-105 ${
               showDeleteConfirm
                 ? 'bg-red-600 text-white shadow-xl'
-                : 'text-gray-300 hover:bg-gray-800/60 backdrop-blur-sm hover:text-white'
+                : 'text-gray-300 hover:bg-white/10 backdrop-blur-sm hover:text-white border border-white/10'
             }`}
           >
             <span className="text-sm font-medium">
@@ -157,11 +168,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
           
           <button
             onClick={onOpenSettings}
-            className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800/60 backdrop-blur-sm rounded-2xl transition-all duration-300 hover:scale-105 hover:text-white"
+            className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-white/10 backdrop-blur-sm rounded-xl transition-all duration-300 hover:scale-105 hover:text-white border border-white/10 mb-3"
           >
             <Settings className="w-5 h-5" />
             <span className="font-medium">{getTranslation(language, 'settings')}</span>
           </button>
+
+          {/* Telegram Contact */}
+          <a
+            href="https://t.me/mi_vs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center gap-4 px-4 py-3 bg-gradient-to-r from-blue-600/20 to-blue-500/20 hover:from-blue-600/30 hover:to-blue-500/30 rounded-xl transition-all duration-300 text-white hover:scale-105 backdrop-blur-sm border border-blue-500/20 relative overflow-hidden mb-4"
+          >
+            {/* Animated waves */}
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 via-transparent to-blue-500/30 animate-pulse"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/20 to-transparent animate-ping"></div>
+            </div>
+            
+            {/* Telegram icon with pulsing effect */}
+            <div className="relative">
+              <svg className="w-6 h-6 text-blue-400 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.568 8.16l-1.61 7.59c-.12.54-.44.67-.89.42l-2.46-1.81-1.19 1.14c-.13.13-.24.24-.49.24l.17-2.43 4.47-4.03c.19-.17-.04-.27-.3-.1L9.28 13.47l-2.38-.75c-.52-.16-.53-.52.11-.77l9.3-3.58c.43-.16.81.1.67.73z"/>
+              </svg>
+              <div className="absolute inset-0 bg-blue-400/30 rounded-full animate-ping"></div>
+            </div>
+            
+            <span className="font-medium relative z-10">Связаться</span>
+          </a>
+
+          {/* Copyright */}
+          <div className="text-center text-xs text-gray-500 mt-4 px-2">
+            © 2025 Михаил Айвазян
+          </div>
         </div>
       </div>
     </>

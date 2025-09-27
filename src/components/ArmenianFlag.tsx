@@ -28,14 +28,14 @@ export const ArmenianFlag: React.FC<ArmenianFlagProps> = ({
   const colors = flagColors[language];
 
   return (
-    <div className={`${sizeClasses[size]} rounded-xl overflow-hidden border border-white/10 shadow-lg relative backdrop-blur-sm ${className}`}>
+    <div className={`${sizeClasses[size]} rounded-lg overflow-hidden border border-white/20 shadow-lg relative backdrop-blur-sm ${className} transition-all duration-500 hover:scale-110 animate-pulse`}>
       <div className="w-full h-full flex flex-col">
-        <div className="flex-1 opacity-60" style={{ backgroundColor: colors[0] }} />
-        <div className="flex-1 opacity-60" style={{ backgroundColor: colors[1] }} />
-        <div className="flex-1 opacity-60" style={{ backgroundColor: colors[2] }} />
+        <div className="flex-1 opacity-80" style={{ backgroundColor: colors[0] }} />
+        <div className="flex-1 opacity-80" style={{ backgroundColor: colors[1] }} />
+        <div className="flex-1 opacity-80" style={{ backgroundColor: colors[2] }} />
       </div>
       {blur && (
-        <div className="absolute inset-0 backdrop-blur-sm bg-white/5 rounded-xl"></div>
+        <div className="absolute inset-0 backdrop-blur-sm bg-white/5 rounded-lg"></div>
       )}
     </div>
   );
@@ -55,77 +55,84 @@ export const ArmenianLogo: React.FC<ArmenianFlagProps> = ({
 
   return (
     <div className={`${sizeClasses[size]} relative ${className}`}>
-      {/* Стильный логотип с горой Арарат */}
-      <svg viewBox="0 0 120 120" className="w-full h-full">
-        {/* Фон логотипа */}
-        <circle cx="60" cy="60" r="58" fill="url(#logoBackground)" stroke="url(#logoBorder)" strokeWidth="2"/>
+      {/* Премиум логотип с горой Арарат */}
+      <svg viewBox="0 0 100 100" className="w-full h-full">
+        {/* Фон с тонким градиентом */}
+        <defs>
+          <linearGradient id="premiumBg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#1f2937" stopOpacity="0.9" />
+            <stop offset="50%" stopColor="#374151" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#111827" stopOpacity="0.9" />
+          </linearGradient>
+          
+          <linearGradient id="mountainGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#9CA3AF" />
+            <stop offset="30%" stopColor="#6B7280" />
+            <stop offset="70%" stopColor="#4B5563" />
+            <stop offset="100%" stopColor="#374151" />
+          </linearGradient>
+          
+          <linearGradient id="armenianGold" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#D90429" />
+            <stop offset="50%" stopColor="#FF8F00" />
+            <stop offset="100%" stopColor="#003F91" />
+          </linearGradient>
+          
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge> 
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Основа логотипа */}
+        <rect width="100" height="100" rx="20" fill="url(#premiumBg)" stroke="url(#armenianGold)" strokeWidth="1" opacity="0.9"/>
         
-        {/* Гора Арарат стилизованная */}
-        <g transform="translate(60, 60)">
-          {/* Основная гора */}
+        {/* Гора Арарат - стилизованная */}
+        <g transform="translate(50, 50)">
+          {/* Главная вершина */}
           <path 
-            d="M-35 15 L-20 -10 L-5 0 L10 -20 L25 -5 L40 15 Z" 
-            fill="url(#mountainGradient)"
-            opacity="0.9"
+            d="M-25 10 L-15 -15 L-5 -8 L5 -20 L15 -12 L25 10 Z" 
+            fill="url(#mountainGrad)"
+            filter="url(#glow)"
+          />
+          
+          {/* Малая вершина */}
+          <path 
+            d="M-35 10 L-28 -5 L-20 2 L-15 10 Z" 
+            fill="url(#mountainGrad)"
+            opacity="0.8"
           />
           
           {/* Снежные вершины */}
-          <path 
-            d="M8 -20 L12 -20 L10 -12 Z" 
-            fill="#ffffff"
-            opacity="0.8"
-          />
-          <path 
-            d="M-22 -10 L-18 -10 L-20 -5 Z" 
-            fill="#ffffff"
-            opacity="0.6"
-          />
+          <path d="M3 -20 L7 -20 L5 -15 Z" fill="#ffffff" opacity="0.9"/>
+          <path d="M-17 -15 L-13 -15 L-15 -10 Z" fill="#ffffff" opacity="0.7"/>
           
           {/* Стилизованные буквы M.A. */}
-          <text x="-15" y="25" className="text-[12px] font-bold fill-white opacity-90" textAnchor="middle">
+          <text x="0" y="20" className="text-[10px] font-bold" fill="url(#armenianGold)" textAnchor="middle" filter="url(#glow)">
             M.A.
           </text>
           
-          {/* Армянские мотивы - тонкие линии */}
+          {/* Армянские декоративные элементы */}
+          <circle cx="-20" cy="15" r="1" fill="#D90429" opacity="0.6"/>
+          <circle cx="20" cy="15" r="1" fill="#FF8F00" opacity="0.6"/>
+          <circle cx="0" cy="25" r="1" fill="#003F91" opacity="0.6"/>
+          
+          {/* Тонкая декоративная линия */}
           <path 
-            d="M-30 20 Q-15 18 0 20 Q15 18 30 20" 
-            stroke="url(#armenianAccent)" 
-            strokeWidth="1" 
+            d="M-30 18 Q0 16 30 18" 
+            stroke="url(#armenianGold)" 
+            strokeWidth="0.5" 
             fill="none" 
-            opacity="0.7"
+            opacity="0.5"
           />
         </g>
-        
-        <defs>
-          <linearGradient id="logoBackground" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#1f2937" />
-            <stop offset="50%" stopColor="#374151" />
-            <stop offset="100%" stopColor="#1f2937" />
-          </linearGradient>
-          
-          <linearGradient id="logoBorder" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#D90429" stopOpacity="0.3" />
-            <stop offset="50%" stopColor="#003F91" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#FF8F00" stopOpacity="0.3" />
-          </linearGradient>
-          
-          <linearGradient id="mountainGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#6B7280" />
-            <stop offset="40%" stopColor="#4B5563" />
-            <stop offset="80%" stopColor="#374151" />
-            <stop offset="100%" stopColor="#1F2937" />
-          </linearGradient>
-          
-          <linearGradient id="armenianAccent" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#D90429" />
-            <stop offset="50%" stopColor="#003F91" />
-            <stop offset="100%" stopColor="#FF8F00" />
-          </linearGradient>
-        </defs>
       </svg>
       
       {blur && (
-        <div className="absolute inset-0 backdrop-blur-sm bg-black/20 rounded-full"></div>
+        <div className="absolute inset-0 backdrop-blur-sm bg-black/20 rounded-xl"></div>
       )}
     </div>
   );
